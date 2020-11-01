@@ -1,0 +1,3 @@
+esp32-case (http://www.thingiverse.com/thing:3195951) by bdmihai is licensed under the GNU - GPL license.
+http://creativecommons.org/licenses/GPL/2.0/
+
