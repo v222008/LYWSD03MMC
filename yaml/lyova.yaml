@@ -1,0 +1,176 @@
+# Переменные 
+substitutions:
+ location: room_lyova
+ plant: HHCCJCY01
+
+# Платформа и имя проекта
+esphome:
+  name: room_lyova
+  platform: ESP32
+  board: nodemcu-32s
+
+# Параметры сети
+wifi:
+  output_power: 17dB
+  ssid: !secret wifi_ssid
+  password: !secret wifi_password
+#  manual_ip:
+#    static_ip: 192.168.0.хх
+#    gateway: 192.168.0.1
+#    subnet: 255.255.255.0
+  ap:
+    ssid: "room_lyova Fallback Hotspot"
+    password: !secret ap_password
+# Логирование
+logger:
+
+# Активация Home Assistant API
+api:
+  password: !secret api_password
+
+ota:
+  password: !secret ota_password
+
+# Веб сервер
+web_server:
+   port: 80
+
+# Интерфал сканирования
+esp32_ble_tracker:
+#  scan_interval: 300s
+
+
+# Наличие BLE устройств в зоне видимости
+binary_sensor:
+
+#------------------------------------------mi_band_2------
+  - platform: ble_presence
+    mac_address: D8:80:3A:34:21:BF
+    name: ${location}_mi_band_2
+#------------------------------------------LMICLOCK------
+  - platform: ble_presence
+    mac_address: E7:2E:00:92:C4:70
+    name: ${location}_MICLOCK
+#------------------------------------------HHCCJCY01------  
+  - platform: ble_presence
+    mac_address: "C4:7C:8D:6B:A9:7E"
+    name: ${location}_HHCCJCY01    
+#----------------------------------------------------------
+#------------------------------------------LYWSD03MMC------
+  - platform: ble_presence
+    mac_address: "A4:C1:38:75:A4:6B"
+    name: ${location}_LYWSD03MMC Dyt
+    
+  - platform: ble_presence
+    mac_address: "A4:C1:38:31:41:B9"
+    name: ${location}_LYWSD03MMC Lyova  
+    
+  - platform: ble_presence
+    mac_address: "A4:C1:38:54:BB:54"
+    name: ${location}_LYWSD03MMC Lyuda   
+#------------------------------------------LYWSD03MMC------
+
+sensor:
+
+  - platform: ble_rssi
+    mac_address: D8:80:3A:34:21:BF
+    name: ${location}_mi_band_2_rssi
+
+  - platform: ble_rssi
+    mac_address: E7:2E:00:92:C4:70
+    name: ${location}_MICLOCK_rssi  
+
+  - platform: ble_rssi
+    mac_address: C4:7C:8D:6B:A9:7E
+    name: ${location}_HHCCJCY01_rssi     
+#------------------------------------------LYWSD03MMC------
+  - platform: ble_rssi
+    mac_address: "A4:C1:38:75:A4:6B"
+    name: ${location}_LYWSD03MMC Dyt_rssi
+
+  - platform: ble_rssi
+    mac_address: "A4:C1:38:31:41:B9"
+    name: ${location}_LYWSD03MMC Lyova_rssi
+
+  - platform: ble_rssi
+    mac_address: "A4:C1:38:54:BB:54"
+    name: ${location}_LYWSD03MMC Lyuda_rssi
+#------------------------------------------LYWSD03MMC------
+
+# Получение данных от сенсоров растений   
+  - platform: xiaomi_hhccjcy01
+    mac_address: "C4:7C:8D:6B:A9:7E"
+    temperature:
+      name: ${plant}_temperature
+    moisture:
+      name: ${plant}_moisture
+    illuminance:
+      name: ${plant}_illuminance
+    conductivity:
+      name: ${plant}_soil
+
+# Датчики температуры и влажности
+  - platform: xiaomi_lywsdcgq
+    mac_address: "e7:2e:00:92:c4:70"
+    temperature:
+      name: ${location}_bt_temperature
+    humidity:
+      name: ${location}_bt_humidity
+    battery_level:
+      name: ${location}_bt_battery_level
+#------------------------------------------LYWSD03MMC------      
+#sensor: lyuda
+  - platform: xiaomi_lywsd03mmc
+    mac_address: "A4:C1:38:75:A4:6B"
+    bindkey: "d86eacc096b3d453cb6d5552111c1c33"
+    temperature:
+      name: "LYWSD03MMC Dyt Temperature"
+    humidity:
+      name: "LYWSD03MMC Dyt Humidity"
+    battery_level:
+      name: "LYWSD03MMC Dyt Battery Level"      
+#sensor: lyova
+  - platform: xiaomi_lywsd03mmc
+    mac_address: "A4:C1:38:31:41:B9"
+    bindkey: "103e7ca3a2df6752c6c3dfb048cec2c3"
+    temperature:
+      name: "LYWSD03MMC Lyova Temperature"
+    humidity:
+      name: "LYWSD03MMC Lyova Humidity"
+    battery_level:
+      name: "LYWSD03MMC Lyova Battery Level"
+#sensor: dyt
+  - platform: xiaomi_lywsd03mmc
+    mac_address: "A4:C1:38:54:BB:54"
+    bindkey: "16c68f48b2983d90e91ef52b818a1d2e"
+    temperature:
+      name: "LYWSD03MMC Lyuda Temperature"
+    humidity:
+      name: "LYWSD03MMC Lyuda Humidity"
+    battery_level:
+      name: "LYWSD03MMC Lyuda Battery Level"      
+#------------------------------------------LYWSD03MMC------
+
+# Время в онлайне
+  - platform: uptime
+    name: ${location}_esp32_uptime
+
+# Уровень сигнала шлюза
+  - platform: wifi_signal
+    name:  ${location}_esp32_wi-fi
+    update_interval: 60s
+
+# Версия прошивки
+text_sensor:
+  - platform: version
+    name: ${location}_esp32_firmware_version
+
+#text_sensor:
+#  - platform: ble_scanner
+#    name: "BLE Devices Scanner"    
+
+# кнопка перезапуска    
+switch:
+  - platform: restart
+    name: ${location}_esp32_Restart
+    
